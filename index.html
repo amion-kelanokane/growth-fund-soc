@@ -1,0 +1,1546 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <title>Innovation and Growth Fund SOC - AMION Dashboard</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="icon" type="image/x-icon" href="assets/anw-dashboard/favicon.ico"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+
+    :root {
+      /*
+        CLIENT COLOUR OVERRIDES
+        Replace these values if the client asks for their palette in future.
+        Keep --crimson as #990033 for AMION-branded drafts unless instructed.
+      */
+      --crimson:       #990033;
+      --crimson-dark:  #700025;
+      --crimson-light: #f9eaee;
+      --crimson-muted: rgba(153, 0, 51, 0.1);
+
+      --gold:          #cfa75e;
+      --gold-dark:     #a5823a;
+      --gold-light:    #fef3d0;
+      --gold-muted:    rgba(207, 167, 94, 0.2);
+
+      --positive:      #1a7a4a;
+      --positive-bg:   #d4f4e0;
+      --negative:      #cc2200;
+      --negative-bg:   #fde8e8;
+      --warning:       #c9920a;
+      --warning-bg:    #fef3cd;
+
+      --teal:          #0d9488;
+      --blue:          #2563eb;
+      --purple:        #7c3aed;
+
+      --bg:            #f5f6f8;
+      --surface:       #ffffff;
+      --surface-soft:  rgba(255, 255, 255, 0.92);
+      --border:        #e5e7eb;
+      --border-strong: #d1d5db;
+      --text:          #111827;
+      --text-muted:    #6b7280;
+      --text-subtle:   #9ca3af;
+
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+      --shadow-md:   0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+      --shadow-lg:   0 16px 44px rgba(17,24,39,.13);
+      --shadow-xl:   0 24px 60px rgba(17,24,39,.18);
+
+      --radius-sm:   8px;
+      --radius-md:   12px;
+      --radius-lg:   16px;
+      --radius-xl:   20px;
+
+      --motion-fast:   120ms;
+      --motion-medium: 240ms;
+      --motion-enter:  420ms;
+      --ease-out:      cubic-bezier(0.16, 1, 0.3, 1);
+
+      --font-sans: 'Poppins', sans-serif;
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.25rem;
+      --text-xl: 1.75rem;
+      --text-display: 2.5rem;
+      --lh-tight: 1.25;
+      --lh-heading: 1.3;
+      --lh-body: 1.5;
+      --lh-loose: 1.65;
+
+      --chart-1: #990033;
+      --chart-2: #cfa75e;
+      --chart-3: #1a7a4a;
+      --chart-4: #2563eb;
+      --chart-5: #7c3aed;
+      --chart-6: #c9920a;
+      --chart-7: #6b7280;
+      --chart-8: #0d9488;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: var(--text-base);
+      line-height: var(--lh-body);
+      color: var(--text);
+      background: linear-gradient(180deg, #f8f7f4 0%, var(--bg) 34%, var(--bg) 100%);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+    button, input { font: inherit; }
+    a { color: var(--crimson); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    p, li { color: var(--text-muted); line-height: var(--lh-loose); }
+    ul { padding-left: 1.2rem; }
+    li + li { margin-top: 0.4rem; }
+    h1, h2, h3 { line-height: var(--lh-heading); color: var(--text); letter-spacing: 0; }
+    h1 { font-size: var(--text-xl); font-weight: 800; }
+    h2 { font-size: var(--text-lg); font-weight: 700; }
+    h3 { font-size: var(--text-base); font-weight: 700; }
+
+    .kpi-value,
+    .data-table th,
+    .data-table td,
+    .metric,
+    .chart-note,
+    .timeline-year,
+    .flow-node strong {
+      font-variant-numeric: tabular-nums;
+    }
+
+    button:focus,
+    a:focus { outline: none; }
+
+    button:focus-visible,
+    a:focus-visible,
+    [tabindex]:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -4rem;
+      left: 1rem;
+      z-index: 3000;
+      background: var(--surface);
+      color: var(--crimson);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-weight: 700;
+    }
+    .skip-link:focus-visible { top: 1rem; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 1200;
+      background: var(--crimson);
+      color: white;
+      box-shadow: 0 10px 28px rgba(77, 0, 25, 0.28);
+      padding-top: env(safe-area-inset-top);
+    }
+
+    .header-inner {
+      min-height: 76px;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 0.7rem 1rem;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.8rem;
+      align-items: center;
+    }
+
+    .brand-lockup {
+      min-height: 50px;
+      min-width: 116px;
+      padding: 0.35rem 0.55rem;
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.13);
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .brand-lockup img { width: 108px; max-height: 42px; object-fit: contain; }
+    .brand-fallback { display: none; color: white; font-weight: 800; letter-spacing: 0.04em; }
+    .brand-fallback span { color: var(--gold); }
+
+    .header-copy { min-width: 0; }
+    .header-kicker {
+      color: rgba(255,255,255,0.72);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .header-copy h1 {
+      color: white;
+      font-size: 1.1rem;
+      line-height: var(--lh-tight);
+      margin-top: 0.1rem;
+      overflow-wrap: anywhere;
+    }
+    .header-copy p {
+      display: none;
+      color: rgba(255,255,255,0.82);
+      font-size: var(--text-sm);
+      line-height: 1.45;
+      margin-top: 0.15rem;
+    }
+    .header-badge,
+    .client-lockup { display: none; }
+
+    .tab-nav {
+      position: sticky;
+      top: calc(76px + env(safe-area-inset-top));
+      z-index: 1100;
+      background: rgba(255,255,255,0.94);
+      border-bottom: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      backdrop-filter: blur(14px);
+    }
+
+    .tab-rail {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 0 0.65rem;
+    }
+    .tab-rail::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      min-height: 52px;
+      min-width: 44px;
+      flex: 0 0 auto;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      padding: 0 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: color var(--motion-fast) var(--ease-out), background var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+    }
+    .tab-btn:hover { color: var(--text); background: rgba(17, 24, 39, 0.035); }
+    .tab-btn:active { transform: translateY(1px); }
+    .tab-btn.active {
+      color: var(--crimson);
+      border-bottom-color: var(--crimson);
+      background: var(--crimson-muted);
+    }
+
+    .page {
+      display: none;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem 3rem;
+      animation: fade-up var(--motion-medium) var(--ease-out);
+    }
+    .page.active { display: block; }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-shell {
+      position: relative;
+      min-height: 560px;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-xl);
+      background: #1f2933;
+    }
+    .hero-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.98) contrast(1.04);
+    }
+    .hero-shell::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(51, 0, 18, 0.88) 0%, rgba(51, 0, 18, 0.72) 42%, rgba(51, 0, 18, 0.26) 100%),
+        linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.36));
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      min-height: 560px;
+      display: grid;
+      align-content: end;
+      padding: 1.25rem;
+      color: white;
+    }
+    .hero-copy { max-width: 760px; }
+    .hero-logo {
+      width: min(220px, 68vw);
+      background: rgba(255,255,255,0.92);
+      border-radius: var(--radius-sm);
+      padding: 0.55rem 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #ffe7aa;
+      font-size: var(--text-sm);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .hero-copy h2 {
+      color: white;
+      font-size: 2.35rem;
+      line-height: 1.05;
+      max-width: 12ch;
+      margin-top: 0.65rem;
+    }
+    .hero-copy h2 span { color: #f7d98b; }
+    .hero-copy p {
+      color: rgba(255,255,255,0.86);
+      max-width: 58ch;
+      margin-top: 1rem;
+      font-size: var(--text-lg);
+      line-height: 1.55;
+    }
+    .hero-actions,
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+
+    .btn {
+      min-height: 44px;
+      min-width: 44px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform var(--motion-fast) var(--ease-out), background var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), color var(--motion-fast) var(--ease-out), box-shadow var(--motion-medium) var(--ease-out);
+    }
+    .btn:hover { transform: translateY(-1px); text-decoration: none; }
+    .btn:active { transform: translateY(0); }
+    .btn-primary { background: var(--gold); color: #332100; box-shadow: 0 10px 24px rgba(0,0,0,0.18); }
+    .btn-primary:hover { background: var(--gold-light); }
+    .btn-outline { background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.42); }
+    .btn-outline:hover { background: rgba(255,255,255,0.2); }
+    .btn-subtle { background: var(--surface); color: var(--crimson); border-color: var(--border-strong); }
+    .btn-subtle:hover { border-color: var(--crimson); box-shadow: var(--shadow-sm); }
+
+    .section { margin-top: 1.5rem; }
+    .section-lead {
+      display: grid;
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+      max-width: 72ch;
+      min-width: 0;
+    }
+    .section-kicker,
+    .card-kicker {
+      color: var(--crimson);
+      font-size: var(--text-xs);
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .section-lead p { font-size: var(--text-base); }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+    .kpi-card,
+    .card,
+    .table-card,
+    .visual-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-sm);
+      min-width: 0;
+    }
+    .kpi-card {
+      padding: 1rem;
+      display: grid;
+      gap: 0.35rem;
+      min-height: 146px;
+      border-top: 4px solid var(--crimson);
+    }
+    .kpi-card.gold { border-top-color: var(--gold); }
+    .kpi-card.green { border-top-color: var(--positive); }
+    .kpi-card.blue { border-top-color: var(--blue); }
+    .kpi-card.teal { border-top-color: var(--teal); }
+    .kpi-value {
+      color: var(--text);
+      font-size: var(--text-display);
+      line-height: var(--lh-tight);
+      font-weight: 800;
+    }
+    .kpi-label { color: var(--text); font-weight: 700; }
+    .kpi-note { color: var(--text-muted); font-size: var(--text-sm); line-height: 1.5; }
+
+    .grid { display: grid; gap: 1rem; min-width: 0; }
+    .grid > * { min-width: 0; }
+    .g2, .g3, .g4, .g12, .g21 { grid-template-columns: 1fr; }
+
+    .card { overflow: hidden; }
+    .card-header {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .card-title-wrap { display: grid; gap: 0.2rem; min-width: 0; }
+    .card-title { color: var(--text); font-weight: 800; font-size: var(--text-lg); line-height: var(--lh-heading); }
+    .card-body { padding: 1rem; }
+    .card-body > * + * { margin-top: 0.85rem; }
+    .prose { max-width: 65ch; }
+    .muted { color: var(--text-muted); }
+
+    .info-btn,
+    .icon-btn {
+      min-height: 44px;
+      min-width: 44px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--crimson);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex: 0 0 auto;
+      transition: background var(--motion-fast) var(--ease-out), border-color var(--motion-fast) var(--ease-out), transform var(--motion-fast) var(--ease-out);
+    }
+    .info-btn:hover,
+    .icon-btn:hover { background: var(--crimson-light); border-color: var(--crimson); transform: translateY(-1px); }
+
+    .sector-card {
+      position: relative;
+      min-height: 380px;
+      overflow: hidden;
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      min-width: 0;
+    }
+    .sector-card img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: var(--bg);
+    }
+    .sector-content { padding: 1rem; display: grid; gap: 0.7rem; }
+    .sector-content h3 { font-size: var(--text-lg); }
+    .sector-tag {
+      width: fit-content;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      background: var(--gold-light);
+      color: #4b3200;
+      font-size: var(--text-xs);
+      font-weight: 800;
+    }
+
+    .badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border-radius: 999px;
+      padding: 0.34rem 0.7rem;
+      font-size: var(--text-xs);
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+    .badge-crimson { color: var(--crimson-dark); background: var(--crimson-light); border-color: rgba(153,0,51,0.16); }
+    .badge-gold { color: #4b3200; background: var(--gold-light); border-color: rgba(207,167,94,0.35); }
+    .badge-green { color: var(--positive); background: var(--positive-bg); }
+    .badge-grey { color: var(--text-muted); background: var(--bg); border-color: var(--border); }
+
+    .chart-wrap {
+      position: relative;
+      min-height: 320px;
+      padding: 1rem;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .chart-wrap.compact { min-height: 220px; padding: 0.75rem; }
+    .chart-wrap.tall { min-height: 410px; }
+    .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+    .chart-note {
+      padding: 0 1rem 1rem;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 680px;
+    }
+    .data-table.compact-table { min-width: 0; }
+    .data-table th,
+    .data-table td {
+      padding: 0.85rem 0.9rem;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid var(--border);
+      font-size: var(--text-sm);
+    }
+    .data-table th {
+      position: sticky;
+      top: 0;
+      background: #fbfbfc;
+      color: var(--text);
+      font-weight: 800;
+      z-index: 1;
+    }
+    .data-table tbody tr:hover { background: var(--crimson-light); }
+    .data-table tbody tr:last-child td { border-bottom: 0; }
+    .numeric { text-align: right; white-space: nowrap; }
+    .score-good { color: var(--positive); font-weight: 800; }
+    .score-risk { color: var(--negative); font-weight: 800; }
+    .score-mid { color: var(--warning); font-weight: 800; }
+
+    .callout {
+      border-left: 5px solid var(--gold);
+      background: linear-gradient(90deg, var(--gold-light), rgba(255,255,255,0.86));
+      border-radius: var(--radius-sm);
+      padding: 1rem;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .callout strong { color: var(--text); font-size: var(--text-lg); }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .financial-kpi-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .finance-brief {
+      display: grid;
+      gap: 1rem;
+    }
+    .mini-metric {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfbfc;
+      padding: 0.85rem;
+      display: grid;
+      gap: 0.3rem;
+    }
+    .mini-metric .metric { font-size: 1.55rem; font-weight: 800; color: var(--crimson); line-height: 1.2; }
+    .mini-metric span { color: var(--text-muted); font-size: var(--text-sm); line-height: 1.45; }
+
+    .flow-wrap,
+    .timeline-wrap {
+      width: 100%;
+      min-height: 430px;
+      padding: 1rem;
+      overflow: hidden;
+    }
+    .timeline-wrap { min-height: 390px; }
+    .flow-wrap svg,
+    .timeline-wrap svg { width: 100%; height: auto; display: block; }
+    .d3-label { font-family: var(--font-sans); fill: var(--text); font-size: 13px; font-weight: 700; }
+    .d3-small { font-family: var(--font-sans); fill: var(--text-muted); font-size: 11px; }
+
+    .pathway-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+    .pathway-step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #fbfbfc;
+    }
+    .step-num {
+      width: 34px;
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--crimson);
+      color: white;
+      font-weight: 800;
+      font-size: var(--text-sm);
+    }
+
+    .risk-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+    .risk-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 0.9rem;
+      background: #fbfbfc;
+      display: grid;
+      gap: 0.4rem;
+    }
+    .risk-item strong { color: var(--text); }
+    .risk-item p { font-size: var(--text-sm); }
+
+    .asset-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    .report-visual {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .report-visual img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      object-fit: contain;
+      background: #fff;
+      padding: 0.7rem;
+    }
+
+    .drawer-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 1900;
+      background: rgba(17,24,39,0.48);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--motion-medium) var(--ease-out), visibility var(--motion-medium) var(--ease-out);
+    }
+    .drawer-backdrop.open { opacity: 1; visibility: visible; }
+
+    .evidence-drawer {
+      position: fixed;
+      top: 0;
+      right: 0;
+      z-index: 2000;
+      width: min(100%, 520px);
+      height: 100%;
+      background: var(--surface);
+      box-shadow: var(--shadow-xl);
+      transform: translateX(104%);
+      transition: transform var(--motion-enter) var(--ease-out);
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+    .evidence-drawer.open { transform: translateX(0); }
+    .drawer-head {
+      padding: max(1rem, env(safe-area-inset-top)) 1rem 1rem;
+      background: var(--crimson);
+      color: white;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .drawer-head h2 { color: white; font-size: var(--text-lg); }
+    .drawer-head p { color: rgba(255,255,255,0.76); font-size: var(--text-sm); line-height: 1.45; }
+    .drawer-close {
+      min-height: 44px;
+      min-width: 44px;
+      border: 1px solid rgba(255,255,255,0.38);
+      border-radius: var(--radius-sm);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+    }
+    .drawer-body {
+      overflow-y: auto;
+      padding: 1rem;
+      display: grid;
+      align-content: start;
+      gap: 1rem;
+    }
+    .drawer-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .drawer-body ul { padding-left: 1.1rem; }
+
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 4000;
+      background: rgba(245,246,248,0.94);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity var(--motion-medium) var(--ease-out), visibility var(--motion-medium) var(--ease-out);
+    }
+    .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+    .loading-overlay[hidden] { display: none; }
+    .loading-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      max-width: 320px;
+    }
+    .spinner {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 4px solid var(--crimson-light);
+      border-top-color: var(--crimson);
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (min-width: 640px) {
+      .header-inner { grid-template-columns: auto 1fr auto; }
+      .header-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        border-radius: 999px;
+        padding: 0.35rem 0.85rem;
+        background: var(--gold);
+        color: #332100;
+        font-size: var(--text-xs);
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .financial-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .risk-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (min-width: 768px) {
+      .header-copy p { display: block; }
+      .hero-content { padding: 2rem; }
+      .hero-copy h2 { font-size: 3.4rem; }
+      .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .g4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .g12 { grid-template-columns: 1fr 2fr; }
+      .g21 { grid-template-columns: 2fr 1fr; }
+      .asset-strip { grid-template-columns: 1.1fr 0.9fr; }
+    }
+
+    @media (min-width: 1024px) {
+      .page { padding: 1.5rem 1.25rem 4rem; }
+      .header-inner { grid-template-columns: auto 1fr auto auto; }
+      .client-lockup {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        min-width: 150px;
+        padding: 0.35rem 0.6rem;
+        border-radius: var(--radius-sm);
+        background: rgba(255,255,255,0.13);
+        border: 1px solid rgba(255,255,255,0.18);
+      }
+      .client-lockup img { width: 138px; max-height: 38px; object-fit: contain; }
+      .kpi-strip { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+      .financial-kpi-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .hero-copy h2 { font-size: 4rem; }
+      .tab-btn { padding: 0 1.1rem; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-shell,
+      .hero-content { min-height: 520px; }
+      .hero-copy h2 { font-size: 2rem; max-width: 13ch; }
+      .hero-copy p { font-size: var(--text-base); }
+      .hero-actions .btn { width: 100%; }
+      .tab-btn { padding: 0 0.7rem; }
+      .chart-wrap { min-height: 280px; }
+    }
+
+    @media (pointer: coarse) {
+      .btn, .tab-btn, .info-btn, .icon-btn, .drawer-close { min-height: 48px; min-width: 48px; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-lockup">
+        <img src="assets/anw-dashboard/amion-logo.png" alt="AMION Consulting" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"/>
+        <div class="brand-fallback">am<span>i</span>on</div>
+      </div>
+      <div class="header-copy">
+        <h1>Innovation and Growth Fund Dashboard</h1>
+      </div>
+      <div class="header-badge">May 2026</div>
+      <div class="client-lockup">
+        <img src="assets/anw-dashboard/anw-official-logo-white.svg" alt="Ambition North Wales" onerror="this.parentElement.style.display='none'"/>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tab-nav" aria-label="Dashboard sections">
+    <div class="tab-rail" role="tablist">
+      <button class="tab-btn active" type="button" role="tab" data-tab="overview" aria-selected="true"><i class="fa-solid fa-gauge-high"></i>Overview</button>
+      <button class="tab-btn" type="button" role="tab" data-tab="strategic" aria-selected="false"><i class="fa-solid fa-compass"></i>Strategic Case</button>
+      <button class="tab-btn" type="button" role="tab" data-tab="economic" aria-selected="false"><i class="fa-solid fa-chart-line"></i>Economic Case</button>
+      <button class="tab-btn" type="button" role="tab" data-tab="financial" aria-selected="false"><i class="fa-solid fa-sterling-sign"></i>Financial Case</button>
+      <button class="tab-btn" type="button" role="tab" data-tab="delivery" aria-selected="false"><i class="fa-solid fa-diagram-project"></i>Commercial &amp; Management</button>
+    </div>
+  </nav>
+
+  <main id="main-content">
+    <section class="page active" id="page-overview" role="tabpanel">
+      <div class="hero-shell">
+        <img class="hero-image" src="assets/anw-dashboard/hero-north-wales.jpg" alt="North Wales coastal landscape" onerror="this.style.display='none'"/>
+        <div class="hero-content">
+          <div class="hero-copy">
+            <img class="hero-logo" src="assets/anw-dashboard/anw-official-logo.svg" alt="Ambition North Wales" onerror="this.style.display='none'"/>
+            <div class="eyebrow"><i class="fa-solid fa-seedling"></i> Lles Economaidd | Growth Deal</div>
+            <h2>Turning SME ambition into <span>regional growth</span></h2>
+            <p>The Innovation and Growth Fund is positioned as a flexible £5 million mechanism to close viability gaps, unlock private investment and help North Wales firms innovate, commercialise and grow.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary" type="button" data-evidence="executive-summary"><i class="fa-solid fa-circle-info"></i>View executive summary</button>
+              <button class="btn btn-outline" type="button" data-go-tab="financial"><i class="fa-solid fa-arrow-trend-up"></i>Follow the funding</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="kpi-strip" aria-label="Headline metrics">
+        <div class="kpi-card"><div class="kpi-value">£5m</div><div class="kpi-label">Public funding envelope</div><div class="kpi-note">Capital-only fund to be refined at BJC stage.</div></div>
+        <div class="kpi-card gold"><div class="kpi-value">40%</div><div class="kpi-label">Maximum grant share</div><div class="kpi-note">Aggregate working assumption across the Fund.</div></div>
+        <div class="kpi-card green"><div class="kpi-value">60%</div><div class="kpi-label">Match funding</div><div class="kpi-note">Expected from recipients or other eligible sources.</div></div>
+        <div class="kpi-card blue"><div class="kpi-value">30</div><div class="kpi-label">Illustrative awards</div><div class="kpi-note">10 larger grants and 20 smaller grants in early planning.</div></div>
+        <div class="kpi-card teal"><div class="kpi-value">3</div><div class="kpi-label">Priority sectors</div><div class="kpi-note">Agri-food, tourism and high value manufacturing.</div></div>
+        <div class="kpi-card"><div class="kpi-value">6</div><div class="kpi-label">Local authority areas</div><div class="kpi-note">North Wales-wide geographic reach.</div></div>
+      </div>
+
+      <div class="section grid g21">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-kicker">SOC proposition</div>
+              <div class="card-title">A flexible missing piece in the support landscape</div>
+            </div>
+            <button class="info-btn" type="button" data-evidence="fund-role" aria-label="Open fund role evidence"><i class="fa-solid fa-info"></i></button>
+          </div>
+          <div class="card-body prose">
+            <p>The SOC frames the Fund as a Growth Deal-backed intervention for business-led innovation, productivity and growth. It is not intended to duplicate existing support; its value is in helping SMEs overcome finance, viability, confidence and commercialisation barriers.</p>
+            <p>The Fund should help businesses capture opportunities linked to universities, colleges, Growth Deal projects, local authorities, Welsh Government, UK Government initiatives, the Flintshire and Wrexham Investment Zone and Anglesey Freeport.</p>
+            <div class="badge-row">
+              <span class="badge badge-crimson"><i class="fa-solid fa-lightbulb"></i> Innovation</span>
+              <span class="badge badge-gold"><i class="fa-solid fa-industry"></i> Productivity</span>
+              <span class="badge badge-green"><i class="fa-solid fa-briefcase"></i> Jobs</span>
+              <span class="badge badge-grey"><i class="fa-solid fa-map-location-dot"></i> Regional access</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-kicker">Why now</div>
+              <div class="card-title">Built for progression to BJC</div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="metric-grid">
+              <div class="mini-metric"><div class="metric">15/15</div><span>Preferred option score across critical success factors.</span></div>
+              <div class="mini-metric"><div class="metric">£1.50</div><span>Minimum match funding per £1 grant, based on the 40/60 assumption.</span></div>
+              <div class="mini-metric"><div class="metric">2026</div><span>May 2026 SOC date, with BJC work next.</span></div>
+              <div class="mini-metric"><div class="metric">2036</div><span>Growth Deal funding horizon confirmed by official Growth Deal context.</span></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="page-strategic" role="tabpanel">
+      <div class="section-lead">
+        <div class="section-kicker">Strategic Case | Cynllun Twf</div>
+        <h2>Sector-focused, place-sensitive support for North Wales SMEs</h2>
+        <p>The strategic case connects a clear regional policy fit with practical barriers facing SMEs: finance gaps, risk aversion, information failures, commercialisation barriers and wider benefits that individual firms cannot fully capture.</p>
+      </div>
+
+      <div class="grid g3">
+        <article class="sector-card">
+          <img src="assets/anw-dashboard/manufacturing-farm.jpg" alt="Rural production facility" onerror="this.src='assets/anw-dashboard/target-sectors.png'"/>
+          <div class="sector-content">
+            <span class="sector-tag"><i class="fa-solid fa-wheat-awn"></i>Bwyd-amaeth</span>
+            <h3>Agri-food</h3>
+            <p>Support for agri-tech, processing, diversification, low-carbon production and resilience where capital costs and market risks hold back investment.</p>
+          </div>
+        </article>
+        <article class="sector-card">
+          <img src="assets/anw-dashboard/tourism-llandudno.jpg" alt="Tourism activity on Llandudno Pier" onerror="this.src='assets/anw-dashboard/target-sectors.png'"/>
+          <div class="sector-content">
+            <span class="sector-tag"><i class="fa-solid fa-person-hiking"></i>Twristiaeth</span>
+            <h3>Tourism</h3>
+            <p>Support for modernisation, digital adoption and year-round visitor activity in a sector affected by seasonality and tight margins.</p>
+          </div>
+        </article>
+        <article class="sector-card">
+          <img src="assets/anw-dashboard/hvm.jpg" alt="High value manufacturing" onerror="this.src='assets/anw-dashboard/target-sectors.png'"/>
+          <div class="sector-content">
+            <span class="sector-tag"><i class="fa-solid fa-robot"></i>Arloesi mewn Gweithgynhyrchu Uwch</span>
+            <h3>High value manufacturing</h3>
+            <p>Support for automation, digitalisation, commercialisation and supply-chain readiness, building from the region's established manufacturing strengths.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="section asset-strip">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-kicker">Market failures to outcomes</div>
+              <div class="card-title">How the Fund changes investment behaviour</div>
+            </div>
+            <button class="info-btn" type="button" data-evidence="market-failures" aria-label="Open market failure evidence"><i class="fa-solid fa-info"></i></button>
+          </div>
+          <div class="flow-wrap" id="logicFlow" aria-label="D3 logic flow diagram"></div>
+        </article>
+        <article class="report-visual">
+          <img src="assets/anw-dashboard/target-sectors.png" alt="SOC target sector icons" onerror="this.parentElement.style.display='none'"/>
+        </article>
+      </div>
+
+      <div class="section grid g2">
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Regional context</div><div class="card-title">SMEs are central to the North Wales economy</div></div></div>
+          <div class="card-body prose">
+            <p>The SOC notes that SMEs account for 99.3% of businesses, 62.3% of employment and 42.5% of turnover across Wales. In North Wales, many are small, dispersed and owner-managed, particularly in rural and coastal areas.</p>
+            <p>Spatial differences matter: Flintshire and Wrexham benefit from the north-east manufacturing corridor, while Gwynedd, Conwy and Denbighshire have lower productivity and more rural or coastal economic structures.</p>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Alignment</div><div class="card-title">A direct fit with wider Growth Deal aims</div></div></div>
+          <div class="card-body prose">
+            <p>The Fund aligns with the North Wales Growth Deal, the Regional Economic Framework, Welsh Government priorities, Wales Innovates, and the Agri-food and Tourism and Innovation in High Value Manufacturing programmes.</p>
+            <p>Official Growth Deal material positions the wider programme around a more vibrant, sustainable and resilient North Wales economy, improved productivity, new jobs and high value sectors.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="page-economic" role="tabpanel">
+      <div class="section-lead">
+        <div class="section-kicker">Economic Case</div>
+        <h2>Option 3 provides the strongest SOC-level fit</h2>
+        <p>Six options were assessed against five critical success factors. The preferred £5m mixed finance option scored 3 across every factor and remains the recommended way forward for further testing at BJC stage.</p>
+      </div>
+
+      <div class="grid g21">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap"><div class="card-kicker">Critical success factor scoring</div><div class="card-title">Longlist assessment</div></div>
+            <button class="info-btn" type="button" data-evidence="option-scoring" aria-label="Open option scoring evidence"><i class="fa-solid fa-info"></i></button>
+          </div>
+          <div class="chart-wrap tall"><canvas id="optionChart" aria-label="Option scores by critical success factor"></canvas></div>
+          <p class="chart-note">Scores are from Table 3.3, where 1 = poor fit, 2 = acceptable and 3 = strong fit.</p>
+        </article>
+
+        <aside class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Preferred option</div><div class="card-title">Option 3: £5m mixed finance</div></div></div>
+          <div class="card-body">
+            <div class="callout">
+              <strong>15/15 CSF score</strong>
+              <p>Best balance of strategic fit, value for money, capacity, affordability and achievability.</p>
+            </div>
+            <p>Option 5, an all-grant model, is retained as a comparator because stakeholder feedback indicates grant support may be more attractive and accessible to SMEs.</p>
+            <button class="btn btn-subtle" type="button" data-evidence="option-five"><i class="fa-solid fa-scale-balanced"></i>Compare grant-only option</button>
+          </div>
+        </aside>
+      </div>
+
+      <div class="section table-wrap">
+        <table class="data-table">
+          <thead><tr><th>Option</th><th>Description</th><th class="numeric">Score</th><th>Shortlisted</th><th>Key interpretation</th></tr></thead>
+          <tbody>
+            <tr><td>1. Do nothing</td><td>No new Fund; businesses rely on existing support and market finance.</td><td class="numeric score-risk">10</td><td>Reference case</td><td>Does not address identified market failures or viability gaps.</td></tr>
+            <tr><td>2. Do less: £3m</td><td>Smaller intervention focused on clearest gaps.</td><td class="numeric score-mid">12</td><td>No</td><td>Lower delivery risk but insufficient strategic scale.</td></tr>
+            <tr><td>3. Preferred: £5m</td><td>Flexible grant, loan and blended finance package.</td><td class="numeric score-good">15</td><td>Yes</td><td>Strongest proportionate fit with need, envelope and delivery requirements.</td></tr>
+            <tr><td>4. Do more: £10m</td><td>Larger fund with wider reach.</td><td class="numeric score-risk">9</td><td>No</td><td>Pipeline, affordability and achievability risks are material.</td></tr>
+            <tr><td>5. All grant</td><td>Capital grant support only.</td><td class="numeric score-mid">11</td><td>Yes</td><td>Accessible and simple, but weaker on recycling and deadweight risk.</td></tr>
+            <tr><td>6. All loan</td><td>Repayable finance only.</td><td class="numeric score-risk">10</td><td>No</td><td>Unlikely to close viability gaps for riskier SME projects.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="page-financial" role="tabpanel">
+      <div class="section-lead">
+        <div class="section-kicker">Financial Case</div>
+        <h2>Making £5m stretch through leverage, product flexibility and staged delivery</h2>
+        <p>The SOC sets out a capital-only £5m public funding envelope and uses early planning assumptions to test how the Fund could balance reach, leverage, accessibility and risk. The detailed product mix remains a BJC decision, but the financial case already points to a fund that should be flexible enough for smaller SMEs while still attracting meaningful private or eligible public match.</p>
+      </div>
+
+      <div class="financial-kpi-strip section" aria-label="Financial case headline figures">
+        <div class="mini-metric"><div class="metric">£5m</div><span>Capital-only public funding envelope available for the Fund.</span></div>
+        <div class="mini-metric"><div class="metric">£7.5m</div><span>Minimum match implied if the full grant envelope follows the 40/60 aggregate assumption.</span></div>
+        <div class="mini-metric"><div class="metric">£12.5m</div><span>Minimum total project value implied by £5m grant plus £7.5m match.</span></div>
+        <div class="mini-metric"><div class="metric">3 yrs</div><span>Indicative deployment profile, with Year 2 as the main delivery year.</span></div>
+      </div>
+
+      <div class="section grid g21">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap">
+              <div class="card-kicker">Affordability read</div>
+              <div class="card-title">The working model is deliberately flexible</div>
+            </div>
+            <button class="info-btn" type="button" data-evidence="match-funding" aria-label="Open match funding evidence"><i class="fa-solid fa-info"></i></button>
+          </div>
+          <div class="card-body prose finance-brief">
+            <p>The Fund is designed around a maximum 40% aggregate grant contribution and at least 60% match funding. This is intended to stretch the £5m envelope, demonstrate applicant commitment and reduce dependency on public support.</p>
+            <p>At project level, the intervention rate can still vary. Smaller capital grants may support up to 50% of eligible costs to improve accessibility for micro and smaller businesses, while larger grants are expected to require a stronger applicant contribution.</p>
+            <p>Low-interest loans and blended finance remain options to test at BJC. The SOC avoids depending on recycled loan repayments in the initial affordability position, which keeps the case suitably cautious at this stage.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Funding products</div><div class="card-title">Routes to be explored during BJC</div></div></div>
+          <div class="table-wrap">
+            <table class="data-table compact-table">
+              <thead><tr><th>Funding route</th><th>Indicative parameters</th></tr></thead>
+              <tbody>
+                <tr><td>Smaller capital grants</td><td>Capped at £100,000 per project, with grant funding up to 50% of eligible costs.</td></tr>
+                <tr><td>Larger capital grants</td><td>Capped at £500,000 per project, with grant funding up to 40% of eligible costs.</td></tr>
+                <tr><td>Low-interest loans</td><td>Offered at 0% or below market-rate interest, with terms to confirm at BJC.</td></tr>
+                <tr><td>Blended finance</td><td>Capped at £750,000 per project, up to 60% of eligible costs.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </div>
+
+      <div class="section grid g2">
+        <article class="table-card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Match sources</div><div class="card-title">Potential co-investment routes</div></div></div>
+          <div class="table-wrap">
+            <table class="data-table compact-table">
+              <thead><tr><th>Source</th><th>Role</th></tr></thead>
+              <tbody>
+                <tr><td>Applicant capital</td><td>Direct contribution to eligible project costs.</td></tr>
+                <tr><td>Commercial borrowing</td><td>Bank finance or repayable finance alongside Fund support.</td></tr>
+                <tr><td>Investor funding</td><td>Equity, shareholder funding or project-linked investment.</td></tr>
+                <tr><td>Other eligible public funding</td><td>Permitted where eligibility, timing and subsidy rules align.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Cost and delivery assumptions</div><div class="card-title">What BJC needs to pin down</div></div></div>
+          <div class="card-body prose">
+            <p>The illustrative grant scenario tests a portfolio of 30 awards: 10 larger capital grants averaging £400,000 and 20 smaller grants averaging £50,000. This is not a final product mix; it is a practical affordability lens.</p>
+            <p>BJC will need to confirm award size, intervention rates, loan terms, administrative costs, match evidence, subsidy control treatment and whether any repayment or recycling mechanism is worth the added complexity.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="section grid g4">
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Leverage</div><div class="card-title">Grant and match</div></div></div>
+          <div class="chart-wrap compact"><canvas id="leverageChart" aria-label="Grant and match funding split"></canvas></div>
+          <p class="chart-note">40% grant, 60% match.</p>
+        </article>
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Profile</div><div class="card-title">Three-year deployment</div></div></div>
+          <div class="chart-wrap compact"><canvas id="profileChart" aria-label="Indicative three year funding profile"></canvas></div>
+          <p class="chart-note">Year 2 is the main delivery year.</p>
+        </article>
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Awards</div><div class="card-title">Illustrative allocation</div></div></div>
+          <div class="chart-wrap compact"><canvas id="allocationChart" aria-label="Illustrative grant allocation by award type"></canvas></div>
+          <p class="chart-note">£4m larger grants; £1m smaller grants.</p>
+        </article>
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Caps</div><div class="card-title">Product ceilings</div></div></div>
+          <div class="chart-wrap compact"><canvas id="capsChart" aria-label="Indicative product caps"></canvas></div>
+          <p class="chart-note">Loan terms and blended rules to confirm.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="page" id="page-delivery" role="tabpanel">
+      <div class="section-lead">
+        <div class="section-kicker">Commercial &amp; Management Cases</div>
+        <h2>Governance is established; operational detail moves into BJC</h2>
+        <p>The Fund is expected to sit within Ambition North Wales' Growth Deal governance framework, with PMO day-to-day management and a detailed scheme of delegation, subsidy, application and monitoring model developed at BJC.</p>
+      </div>
+
+      <div class="grid g21">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-title-wrap"><div class="card-kicker">BJC pathway</div><div class="card-title">From SOC approval to live application process</div></div>
+            <button class="info-btn" type="button" data-evidence="approval-pathway" aria-label="Open approval pathway evidence"><i class="fa-solid fa-info"></i></button>
+          </div>
+          <div class="timeline-wrap" id="bjcTimeline" aria-label="D3 BJC pathway timeline"></div>
+        </article>
+        <aside class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Governance roles</div><div class="card-title">Clear accountability points</div></div></div>
+          <div class="card-body pathway-list">
+            <div class="pathway-step"><span class="step-num">1</span><div><h3>Economic Well-being Sub-Committee</h3><p>Principal decision-making body for Growth Deal business cases and funding decisions.</p></div></div>
+            <div class="pathway-step"><span class="step-num">2</span><div><h3>Portfolio Board</h3><p>Oversight of alignment with portfolio objectives, risks, benefits and progress.</p></div></div>
+            <div class="pathway-step"><span class="step-num">3</span><div><h3>Portfolio Management Office</h3><p>Day-to-day coordination, reporting, risk management and assurance alignment.</p></div></div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="section grid g2">
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Strategic risks</div><div class="card-title">What BJC needs to resolve</div></div><button class="info-btn" type="button" data-evidence="risk-register" aria-label="Open risk evidence"><i class="fa-solid fa-info"></i></button></div>
+          <div class="card-body risk-grid">
+            <div class="risk-item"><strong>SME participation</strong><p>Market engagement and simple guidance are needed to avoid low or uneven uptake.</p></div>
+            <div class="risk-item"><strong>Match funding uncertainty</strong><p>Evidence rules and potential co-funding routes need to be tested before approval.</p></div>
+            <div class="risk-item"><strong>Intervention rates</strong><p>Rates must be high enough to close viability gaps without weakening additionality.</p></div>
+            <div class="risk-item"><strong>Loan appetite</strong><p>SME reluctance to take on debt could limit demand for repayable or blended products.</p></div>
+            <div class="risk-item"><strong>Delivery speed</strong><p>Slow approvals could deter SMEs and delay spend against the profile.</p></div>
+            <div class="risk-item"><strong>Compliance and default</strong><p>Due diligence, clawback, repayment and monitoring arrangements must be proportionate.</p></div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header"><div class="card-title-wrap"><div class="card-kicker">Monitoring indicators</div><div class="card-title">What success should track</div></div></div>
+          <div class="card-body">
+            <div class="pathway-list">
+              <div class="pathway-step"><span class="step-num"><i class="fa-solid fa-file-signature"></i></span><div><h3>Fund delivery outputs</h3><p>Applications, awards, award value, and geographic and sector distribution.</p></div></div>
+              <div class="pathway-step"><span class="step-num"><i class="fa-solid fa-coins"></i></span><div><h3>Investment and leverage</h3><p>Total project value, private and public match, leverage ratio and recycled funding.</p></div></div>
+              <div class="pathway-step"><span class="step-num"><i class="fa-solid fa-building"></i></span><div><h3>Business outcomes</h3><p>SMEs supported, jobs created and safeguarded, productivity gains and new markets.</p></div></div>
+              <div class="pathway-step"><span class="step-num"><i class="fa-solid fa-lightbulb"></i></span><div><h3>Innovation outcomes</h3><p>New products, services, processes, R&amp;D activity and collaboration with innovation partners.</p></div></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <aside class="evidence-drawer" id="evidenceDrawer" aria-hidden="true" aria-labelledby="drawerTitle">
+    <div class="drawer-head">
+      <div>
+        <h2 id="drawerTitle">Evidence note</h2>
+        <p id="drawerSource">Source</p>
+      </div>
+      <button class="drawer-close" type="button" id="drawerClose" aria-label="Close evidence note"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-tags" id="drawerTags"></div>
+      <p id="drawerSummary"></p>
+      <ul id="drawerBullets"></ul>
+    </div>
+  </aside>
+
+  <div class="loading-overlay" id="loadingOverlay" aria-live="polite">
+    <div class="loading-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <div>
+        <strong>Building dashboard</strong>
+        <p>Loading charts and evidence notes...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script>
+    const CHART_PALETTE = ['#990033', '#cfa75e', '#1a7a4a', '#2563eb', '#7c3aed', '#c9920a', '#6b7280', '#0d9488'];
+    const chartRegistry = {};
+    const chartsBuilt = { overview: false, strategic: false, economic: false, financial: false, delivery: false };
+
+    const evidenceNotes = {
+      'executive-summary': {
+        title: 'Executive summary',
+        source: 'SOC Executive Summary',
+        tags: ['Overview', 'SOC', 'May 2026'],
+        summary: 'The Fund is proposed as a Growth Deal-backed intervention to support business-led innovation, productivity and growth across North Wales.',
+        bullets: ['Preferred option is a targeted £5m Fund offering a flexible mix of grant, loan and blended finance.', 'Grant support is expected to cover a maximum of 40% of eligible project costs in aggregate.', 'Key BJC-stage risks include SME participation, match funding, intervention rates, project viability and delivery speed.']
+      },
+      'fund-role': {
+        title: 'Role of the Fund',
+        source: 'Strategic Case: Role of the Fund and existing provision',
+        tags: ['Strategic Case', 'Additionality'],
+        summary: 'The Fund should complement, not duplicate, the existing business support and finance landscape.',
+        bullets: ['It is framed as gap funding and blended finance support where existing provision does not fully address viability or project-readiness gaps.', 'Stakeholder consultation indicates SMEs face difficulty navigating and using support, not simply absence of support.', 'Eligibility, structured referrals and additionality tests are expected to manage overlap.']
+      },
+      'market-failures': {
+        title: 'Market failure rationale',
+        source: 'Strategic Case: Market failures',
+        tags: ['Access to finance', 'Risk', 'Information'],
+        summary: 'The SOC identifies finance gaps, risk aversion, information failures, commercialisation barriers and wider benefits as reasons for intervention.',
+        bullets: ['SMEs may lack retained earnings or lender confidence for innovation and commercialisation activity.', 'Smaller firms may delay or reduce investment where risks are difficult to manage.', 'Wider productivity, supply-chain and innovation benefits are not fully captured by individual businesses.']
+      },
+      'option-scoring': {
+        title: 'Longlist assessment',
+        source: 'Table 3.3: Long list assessment',
+        tags: ['Economic Case', 'Options'],
+        summary: 'Six options were scored against strategic fit, value for money, capacity, affordability and achievability.',
+        bullets: ['Option 3 scored 15/15 and was carried forward as the preferred option.', 'Option 5 was retained for further appraisal because grant support may be more attractive to SMEs.', 'Options scoring 1 against any CSF were considered to have a material weakness.']
+      },
+      'option-five': {
+        title: 'Grant-only comparator',
+        source: 'Economic Case: Short-list of options',
+        tags: ['Option 5', 'BJC comparator'],
+        summary: 'The all-grant model is retained to test whether a simpler, more accessible route could outperform the preferred mixed finance model in practice.',
+        bullets: ['Strength: easier for SMEs to understand and access.', 'Risk: weaker value for money if it increases deadweight or grant dependency.', 'BJC should compare demand, deliverability, additionality, intervention rates and fund management costs.']
+      },
+      'match-funding': {
+        title: 'Match funding assumption',
+        source: 'Financial Case: Match funding',
+        tags: ['Financial Case', 'Leverage'],
+        summary: 'Across the Fund as a whole, grant support is expected to cover a maximum of 40% of eligible project costs, with at least 60% match funding.',
+        bullets: ['Every £1 of Innovation and Growth Fund grant support would be expected to support at least £1.50 of match funding.', 'Smaller grants may allow a higher intervention rate to improve accessibility for SMEs.', 'Detailed match funding rules, evidence and subsidy treatment are to be confirmed at BJC stage.']
+      },
+      'approval-pathway': {
+        title: 'Approval pathway',
+        source: 'Table 6.2: Indicative Fund approval pathway',
+        tags: ['Management Case', 'Governance'],
+        summary: 'The SOC establishes a progression route from SOC approval through BJC, operational documentation, launch, award approvals and delivery monitoring.',
+        bullets: ['BJC confirms detailed fund design, affordability, value for money, governance, risk and assurance.', 'Fund documentation will include application forms, guidance, eligibility criteria, assessment frameworks and funding agreements.', 'Award approvals should be made through agreed delegated or formal approval routes.']
+      },
+      'risk-register': {
+        title: 'Initial programme risks',
+        source: 'Tables 4.7 and 6.4',
+        tags: ['Risks', 'BJC'],
+        summary: 'The key risks relate to demand, match funding, loan appetite, project viability, compliance and delivery speed.',
+        bullets: ['Early market engagement, clear communications and simple guidance are mitigation themes across several risks.', 'BJC should test product demand and avoid relying on recycled funding in the initial affordability case.', 'Monitoring should track distribution by sector and geography to reduce uneven access.']
+      }
+    };
+
+    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const drawer = document.getElementById('evidenceDrawer');
+    const backdrop = document.getElementById('drawerBackdrop');
+    const closeBtn = document.getElementById('drawerClose');
+    let lastDrawerTrigger = null;
+
+    function showTab(tabId, options = {}) {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.tab === tabId;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+      });
+      pages.forEach((page) => page.classList.toggle('active', page.id === 'page-' + tabId));
+      buildForTab(tabId);
+      if (options.scroll !== false) window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    tabs.forEach((btn, index) => {
+      btn.addEventListener('click', () => showTab(btn.dataset.tab));
+      btn.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const nextIndex = event.key === 'ArrowRight'
+          ? (index + 1) % tabs.length
+          : (index - 1 + tabs.length) % tabs.length;
+        tabs[nextIndex].focus();
+        showTab(tabs[nextIndex].dataset.tab);
+      });
+    });
+
+    document.querySelectorAll('[data-go-tab]').forEach((btn) => {
+      btn.addEventListener('click', () => showTab(btn.dataset.goTab));
+    });
+
+    function openEvidence(id, trigger) {
+      const note = evidenceNotes[id];
+      if (!note) return;
+      lastDrawerTrigger = trigger || document.activeElement;
+      document.getElementById('drawerTitle').textContent = note.title;
+      document.getElementById('drawerSource').textContent = note.source;
+      document.getElementById('drawerSummary').textContent = note.summary;
+      const tags = document.getElementById('drawerTags');
+      tags.innerHTML = note.tags.map((tag) => `<span class="badge badge-crimson">${tag}</span>`).join('');
+      const bullets = document.getElementById('drawerBullets');
+      bullets.innerHTML = note.bullets.map((item) => `<li>${item}</li>`).join('');
+      drawer.classList.add('open');
+      backdrop.classList.add('open');
+      drawer.setAttribute('aria-hidden', 'false');
+      closeBtn.focus();
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeEvidence() {
+      drawer.classList.remove('open');
+      backdrop.classList.remove('open');
+      drawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if (lastDrawerTrigger) lastDrawerTrigger.focus();
+    }
+
+    document.querySelectorAll('[data-evidence]').forEach((btn) => {
+      btn.addEventListener('click', () => openEvidence(btn.dataset.evidence, btn));
+    });
+    closeBtn.addEventListener('click', closeEvidence);
+    backdrop.addEventListener('click', closeEvidence);
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && drawer.classList.contains('open')) closeEvidence();
+    });
+
+    function chartOptions(extra = {}) {
+      return {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { labels: { usePointStyle: true, boxWidth: 8 } },
+          tooltip: {
+            backgroundColor: '#111827',
+            titleFont: { family: "'Poppins', sans-serif", weight: '700' },
+            bodyFont: { family: "'Poppins', sans-serif" },
+            padding: 12,
+            cornerRadius: 8
+          }
+        },
+        scales: extra.scales || {},
+        ...extra
+      };
+    }
+
+    function createChart(id, config) {
+      if (!window.Chart || chartRegistry[id]) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      chartRegistry[id] = new Chart(el, config);
+    }
+
+    function buildEconomicCharts() {
+      createChart('optionChart', {
+        type: 'bar',
+        data: {
+          labels: ['Do nothing', 'Do less', 'Preferred £5m', 'Do more', 'All grant', 'All loan'],
+          datasets: [
+            { label: 'Strategic', data: [1, 1, 3, 3, 2, 1], backgroundColor: '#990033' },
+            { label: 'VFM', data: [1, 2, 3, 2, 2, 2], backgroundColor: '#cfa75e' },
+            { label: 'Capacity', data: [2, 3, 3, 2, 3, 2], backgroundColor: '#1a7a4a' },
+            { label: 'Affordable', data: [3, 3, 3, 1, 2, 3], backgroundColor: '#2563eb' },
+            { label: 'Achievable', data: [3, 3, 3, 1, 3, 2], backgroundColor: '#7c3aed' }
+          ]
+        },
+        options: chartOptions({
+          scales: {
+            x: { stacked: true, grid: { display: false } },
+            y: { stacked: true, beginAtZero: true, max: 15, ticks: { stepSize: 3 } }
+          }
+        })
+      });
+    }
+
+    function buildFinancialCharts() {
+      createChart('leverageChart', {
+        type: 'doughnut',
+        data: {
+          labels: ['Innovation and Growth Fund grant', 'Recipient / eligible match'],
+          datasets: [{ data: [40, 60], backgroundColor: ['#990033', '#cfa75e'], borderWidth: 0 }]
+        },
+        options: chartOptions({ cutout: '62%' })
+      });
+
+      createChart('profileChart', {
+        type: 'bar',
+        data: {
+          labels: ['Year 1', 'Year 2', 'Year 3'],
+          datasets: [{ label: 'Funding profile (£m)', data: [0.75, 2.5, 1.75], backgroundColor: ['#cfa75e', '#990033', '#1a7a4a'], borderRadius: 8 }]
+        },
+        options: chartOptions({
+          scales: {
+            y: { beginAtZero: true, ticks: { callback: (value) => `£${value}m` } },
+            x: { grid: { display: false } }
+          }
+        })
+      });
+
+      createChart('allocationChart', {
+        type: 'doughnut',
+        data: {
+          labels: ['Larger grants: 10 x £400k', 'Smaller grants: 20 x £50k'],
+          datasets: [{ data: [4, 1], backgroundColor: ['#990033', '#cfa75e'], borderWidth: 0 }]
+        },
+        options: chartOptions({ cutout: '58%' })
+      });
+
+      createChart('capsChart', {
+        type: 'bar',
+        data: {
+          labels: ['Smaller grants', 'Larger grants', 'Blended finance'],
+          datasets: [{ label: 'Indicative cap (£000)', data: [100, 500, 750], backgroundColor: ['#cfa75e', '#990033', '#0d9488'], borderRadius: 8 }]
+        },
+        options: chartOptions({
+          indexAxis: 'y',
+          scales: {
+            x: { beginAtZero: true, ticks: { callback: (value) => `£${value}k` } },
+            y: { grid: { display: false } }
+          }
+        })
+      });
+    }
+
+    function buildLogicFlow() {
+      const host = document.getElementById('logicFlow');
+      if (!window.d3 || !host || host.dataset.built) return;
+      host.dataset.built = 'true';
+      const width = 920;
+      const height = 430;
+      const svg = d3.select(host).append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img');
+      const columns = [
+        { title: 'Market failures', x: 105, colour: '#990033', items: ['Access to finance', 'Risk aversion', 'Information failures', 'Commercialisation barriers'] },
+        { title: 'Fund mechanisms', x: 455, colour: '#cfa75e', items: ['Capital grants', 'Low-interest loans', 'Blended finance', 'Project-readiness support'] },
+        { title: 'Regional outcomes', x: 805, colour: '#1a7a4a', items: ['Jobs created and safeguarded', 'Private investment leveraged', 'Productivity gains', 'New products and markets'] }
+      ];
+      svg.append('defs').append('marker')
+        .attr('id', 'arrow').attr('viewBox', '0 -5 10 10').attr('refX', 9).attr('refY', 0).attr('markerWidth', 8).attr('markerHeight', 8).attr('orient', 'auto')
+        .append('path').attr('d', 'M0,-5L10,0L0,5').attr('fill', '#6b7280');
+
+      svg.selectAll('.flow-link')
+        .data([[250, 455], [600, 805]])
+        .join('path')
+        .attr('d', (d) => `M${d[0]},215 C${d[0] + 70},215 ${d[1] - 90},215 ${d[1] - 55},215`)
+        .attr('fill', 'none')
+        .attr('stroke', '#6b7280')
+        .attr('stroke-width', 3)
+        .attr('marker-end', 'url(#arrow)')
+        .attr('opacity', 0.7);
+
+      const groups = svg.selectAll('.flow-col').data(columns).join('g').attr('transform', (d) => `translate(${d.x}, 0)`);
+      groups.append('rect')
+        .attr('x', -105).attr('y', 34).attr('width', 210).attr('height', 345).attr('rx', 12)
+        .attr('fill', '#fff').attr('stroke', '#e5e7eb');
+      groups.append('circle').attr('cx', 0).attr('cy', 78).attr('r', 30).attr('fill', (d) => d.colour);
+      groups.append('text').attr('x', 0).attr('y', 84).attr('text-anchor', 'middle').attr('fill', '#fff').attr('font-family', 'Poppins').attr('font-size', 20).attr('font-weight', 800).text((d, i) => i + 1);
+      groups.append('text').attr('class', 'd3-label').attr('x', 0).attr('y', 128).attr('text-anchor', 'middle').text((d) => d.title);
+
+      groups.each(function(col) {
+        const g = d3.select(this);
+        g.selectAll('.flow-item').data(col.items).join('text')
+          .attr('class', 'd3-small')
+          .attr('x', -78)
+          .attr('y', (item, i) => 172 + i * 44)
+          .text((item) => item);
+        g.selectAll('.flow-dot').data(col.items).join('circle')
+          .attr('cx', -92)
+          .attr('cy', (item, i) => 168 + i * 44)
+          .attr('r', 4)
+          .attr('fill', col.colour);
+      });
+    }
+
+    function buildTimeline() {
+      const host = document.getElementById('bjcTimeline');
+      if (!window.d3 || !host || host.dataset.built) return;
+      host.dataset.built = 'true';
+      const width = 920;
+      const height = 360;
+      const stages = [
+        ['SOC approval', 'Proceed to BJC'],
+        ['BJC development', 'Confirm detailed Fund model'],
+        ['Operational docs', 'Guidance, forms and agreements'],
+        ['Fund launch', 'Open application process'],
+        ['Award approvals', 'Delegated funding decisions'],
+        ['Delivery reporting', 'Monitor spend and risks']
+      ];
+      const svg = d3.select(host).append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('role', 'img');
+      const scale = d3.scalePoint().domain(stages.map((d) => d[0])).range([75, width - 75]);
+      svg.append('line').attr('x1', 75).attr('x2', width - 75).attr('y1', 150).attr('y2', 150).attr('stroke', '#d1d5db').attr('stroke-width', 4);
+      const stage = svg.selectAll('.stage').data(stages).join('g').attr('transform', (d) => `translate(${scale(d[0])},150)`);
+      stage.append('circle').attr('r', 24).attr('fill', (d, i) => CHART_PALETTE[i % CHART_PALETTE.length]).attr('stroke', '#fff').attr('stroke-width', 4);
+      stage.append('text').attr('text-anchor', 'middle').attr('dy', 5).attr('fill', '#fff').attr('font-family', 'Poppins').attr('font-weight', 800).attr('font-size', 14).text((d, i) => i + 1);
+      stage.append('text').attr('class', 'd3-label').attr('text-anchor', 'middle').attr('y', (d, i) => i % 2 ? 76 : -62).text((d) => d[0]);
+      stage.append('text').attr('class', 'd3-small').attr('text-anchor', 'middle').attr('y', (d, i) => i % 2 ? 96 : -42).text((d) => d[1]);
+    }
+
+    function buildForTab(tabId) {
+      if (chartsBuilt[tabId]) return;
+      if (tabId === 'strategic') buildLogicFlow();
+      if (tabId === 'economic') buildEconomicCharts();
+      if (tabId === 'financial') buildFinancialCharts();
+      if (tabId === 'delivery') buildTimeline();
+      chartsBuilt[tabId] = true;
+    }
+
+    function initDashboard() {
+      if (window.Chart) {
+        Chart.defaults.font.family = "'Poppins', sans-serif";
+        Chart.defaults.color = '#6b7280';
+      }
+      const hashTab = window.location.hash.replace('#', '');
+      const initialTab = tabs.some((tab) => tab.dataset.tab === hashTab) ? hashTab : 'overview';
+      showTab(initialTab, { scroll: false });
+      window.setTimeout(() => {
+        const overlay = document.getElementById('loadingOverlay');
+        overlay.classList.add('hidden');
+        overlay.setAttribute('hidden', '');
+      }, 450);
+    }
+
+    window.addEventListener('load', initDashboard);
+    window.addEventListener('resize', () => {
+      Object.values(chartRegistry).forEach((chart) => chart.resize());
+    });
+  </script>
+</body>
+</html>
